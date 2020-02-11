@@ -10,15 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200211004649) do
+ActiveRecord::Schema.define(version: 2020_02_11_192933) do
 
   create_table "characters", force: :cascade do |t|
-    t.string  "name"
-    t.string  "race"
-    t.string  "class"
+    t.string "name"
+    t.integer "level"
     t.integer "exp"
-    t.boolean "alive"
-    t.string  "creator"
+    t.string "character_class"
+    t.string "race"
+    t.string "creator"
+  end
+
+  create_table "charactersparty", force: :cascade do |t|
+    t.integer "character_id"
+    t.integer "party_id"
+  end
+
+  create_table "parties", force: :cascade do |t|
+    t.string "name"
+    t.boolean "available", default: true
   end
 
 end
