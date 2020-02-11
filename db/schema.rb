@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200210234129) do
+ActiveRecord::Schema.define(version: 20200211004649) do
 
   create_table "characters", force: :cascade do |t|
     t.string  "name"
@@ -19,11 +19,6 @@ ActiveRecord::Schema.define(version: 20200210234129) do
     t.integer "exp"
     t.boolean "alive"
     t.string  "creator"
-  end
-
-  create_table "parties", force: :cascade do |t|
-    t.string  "name"
-    t.boolean "available"
   end
 
 end
