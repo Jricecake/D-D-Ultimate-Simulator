@@ -2,8 +2,8 @@ class Character < ActiveRecord::Base
     has_many :characters_groups, dependent: :destroy
     has_many :groups, through: :characters_groups
 
-    def self.all_character_names
-        Character.all.map{|char| char.name}
+    def self.all_characters
+        Character.all.map {|char| puts "#{char.name} is a level #{char.level} #{char.character_class}"}
     end
 
     def self.available_chars
@@ -53,3 +53,4 @@ class Character < ActiveRecord::Base
     end
 
 end
+
