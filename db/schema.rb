@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2020_02_11_192933) do
     t.integer "exp"
     t.string "character_class"
     t.string "race"
+    t.integer "number_of_groups"
     t.string "creator"
   end
 

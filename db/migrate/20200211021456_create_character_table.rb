@@ -6,6 +6,7 @@ class CreateCharacterTable < ActiveRecord::Migration[5.0]
       t.integer :exp
       t.string :character_class
       t.string :race
+      t.integer :number_of_groups
       t.string :creator
     end
   end
