@@ -1,6 +1,6 @@
-class CreateParties < ActiveRecord::Migration[5.2]
+class CreateGroups < ActiveRecord::Migration[5.2]
   def change
-    create_table :parties do |t|
+    create_table :groups do |t|
       t.string :name
       t.boolean :available, default: true
     end

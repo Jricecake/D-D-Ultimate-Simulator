@@ -21,12 +21,12 @@ ActiveRecord::Schema.define(version: 2020_02_11_192933) do
     t.string "creator"
   end
 
-  create_table "charactersparty", force: :cascade do |t|
+  create_table "characters_groups", force: :cascade do |t|
     t.integer "character_id"
-    t.integer "party_id"
+    t.integer "group_id"
   end
 
-  create_table "parties", force: :cascade do |t|
+  create_table "groups", force: :cascade do |t|
     t.string "name"
     t.boolean "available", default: true
   end
