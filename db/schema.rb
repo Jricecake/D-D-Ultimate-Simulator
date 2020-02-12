@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2020_02_11_192933) do
   create_table "groups", force: :cascade do |t|
     t.string "name"
     t.boolean "available", default: true
+    t.boolean "out_on_quest", default: false
   end
 
 end

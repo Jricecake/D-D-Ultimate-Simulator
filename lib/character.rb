@@ -1,13 +1,26 @@
 class Character < ActiveRecord::Base
-    has_many :characters_groups
+    has_many :characters_groups, dependent: :destroy
     has_many :groups, through: :characters_groups
 
+    def self.all_character_names
+        Character.all.map{|char| char.name}
+    end
+
+    def self.available_chars
+        Character.all.select{|char| char.number_of_groups == 0}
+    end
+
     def level_up
-        
+        current_level = self.level
+        if current_level < 20
+            self.update_column(:level, current_level+=1) 
+        else
+            puts "This character is already maxed."
+        end
     end
 
     def join_group(group)
-        current_membership = self.number_of_groups
+        current_membership = CharactersGroup.where(character_id: self.id).count
         if group.characters.exists?(self.id)
             puts "This character is already in this group!"
         else
@@ -30,11 +43,13 @@ class Character < ActiveRecord::Base
     end
 
     def leave_all_groups
+        current_membership = self.number_of_groups
         self.groups.clear
+        self.update_column(:number_of_groups, current_membership)
     end
 
     def died
-        self.destroy
+        Character.destroy(self.id)
     end
 
 end
