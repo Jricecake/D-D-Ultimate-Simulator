@@ -14,11 +14,11 @@ ActiveRecord::Schema.define(version: 2020_02_11_192933) do
 
   create_table "characters", force: :cascade do |t|
     t.string "name"
-    t.integer "level"
-    t.integer "exp"
+    t.integer "level", default: 1
+    t.integer "exp", default: 0
     t.string "character_class"
     t.string "race"
-    t.integer "number_of_groups"
+    t.integer "number_of_groups", default: 0
     t.string "creator"
   end
 
