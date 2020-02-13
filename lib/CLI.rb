@@ -12,6 +12,7 @@ class CommandLineInterface
     def run
         puts "Greetings, Traveler! Could'st thou be in search of excitement and adventure?".red
         puts "Come...tell me about yourself...glory awaits!".colorize(:light_red)
+        create_a_character
     end
 
     def party_choice
@@ -24,7 +25,7 @@ class CommandLineInterface
                 desired_group = Group.all.find_by(name: group_selection)
                 @@new_hero.join_group(desired_group)
                 @@new_party = desired_group
-                binding.pry
+                # binding.pry
                 puts "A formidable bunch!\n".red
                 go_quest
         elsif selection == "Form a Party"
@@ -41,6 +42,7 @@ class CommandLineInterface
         hero_class = prompt.select("What is your class?".red, @classes_type)
         hero_race = prompt.select("What is your race?".red, @races)
         @@new_hero = Character.create(name: hero_name, character_class: hero_class, race: hero_race)
+        party_choice
     end
 
     def form_a_party
@@ -119,19 +121,27 @@ class CommandLineInterface
     end
 
     def take_drink
+        prompt = TTY::Prompt.new
         if @@drink_count < 5
-        @@drink_count += 1
-        binding.pry
+        # binding.pry
         puts "A frothy ale appears in front of you. You drink it down and feel just that much better!\n".red
-        tavern_time
-        elsif @drink_count < 10
         @@drink_count += 1
-        puts "Wow, you're starting to feel REALLY good! You're having so much fun!\n".red
         tavern_time
-        else
-            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar, you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well. Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.".red
-            @@new_hero.die
-            restart
+        end
+        if @@drink_count >= 5 && @@drink_count < 10
+        puts "Wow, you're starting to feel REALLY good! You're having so much fun!\n".red
+        @@drink_count += 1
+        tavern_time
+        end
+        if @@drink_count == 10
+            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar, you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well. Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".red
+            @@new_hero.died
+            restart_question = prompt.select("Restart?".red %w(Yes No))
+                if restart_question == "Yes"
+                    restart
+                elsif restart_question == "No"
+                    exit
+                end
         end
     end
 
@@ -144,5 +154,11 @@ class CommandLineInterface
         Group.all.map {|group| group.name}
     end
 
+    def restart
+        @@new_hero = nil
+        @@new_party = nil
+        @@drink_count = 0
+        run
+    end
 
 end
