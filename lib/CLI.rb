@@ -22,7 +22,8 @@ class CommandLineInterface
             group_selection = prompt.select("Which group will you join?", view_parties)
                 desired_group = Group.all.where(name: group_selection)
                 @@new_hero.join_group(desired_group[0])
-                puts "A formidable bunch!"
+                puts "A formidable bunch!\n"
+                go_quest
         elsif selection == "Form a Party"
             form_a_party
         end
@@ -98,7 +99,11 @@ class CommandLineInterface
     
 
     def go_quest
-
+        puts "Your party is ready for adventure! You find your nearest quest and depart!"
+        binding.pry
+        @@new_party.adventure
+        @@new_party.return_from_quest
+        puts "Wow, you really did it! Good job!"
     end
 
     def view_available_characters
