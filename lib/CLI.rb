@@ -17,7 +17,7 @@ class CommandLineInterface
 
     def party_choice
         prompt = TTY::Prompt.new
-        selections = ["Join a Party", "Form a Party"]
+        selections = ["Form a Party", "Join a Party"]
         puts "Ahhh yes #{@@new_hero.name}.. Glory has never been attained on one's lonesome. You must find a party to adventure with!".red
         selection = prompt.select("Will you join one, or form one?".red, selections)
         if selection == "Join a Party"
@@ -27,7 +27,7 @@ class CommandLineInterface
                 @@new_party = desired_group
                 # binding.pry
                 puts "A formidable bunch!\n".red
-                go_quest
+                town_square
         elsif selection == "Form a Party"
             form_a_party
         end
@@ -42,7 +42,7 @@ class CommandLineInterface
         hero_class = prompt.select("What is your class?".red, @classes_type)
         hero_race = prompt.select("What is your race?".red, @races)
         @@new_hero = Character.create(name: hero_name, character_class: hero_class, race: hero_race)
-        party_choice
+        town_square
     end
 
     def form_a_party
@@ -67,11 +67,11 @@ class CommandLineInterface
             if more_members == "Yes"
                 add_to_party
             elsif more_members == "No"
-                go_quest
+                town_square
             elsif more_members == "View Party"
                 # binding.pry
                 puts "Your party consists of:\n".red
-                Group.last.members
+                @@new_party.members
                 puts "\n"
                 add_to_party
             else
@@ -88,7 +88,7 @@ class CommandLineInterface
         # binding.pry
         if chance == 6
             @@new_party.die
-            puts "Oh no! It seems your party was eaten by a dragon! You're all dead and no one remembers you. You die slowly, painfully, and without purpose. As you the last few drops of blood seep from your wounds, you glance over and see the rest of your party, resenting you for your idea to come here in the first place.".red
+            puts "Oh no! It seems your party was eaten by a dragon! You're all dead and no one remembers you. You die slowly, painfully, and without purpose.\n As you the last few drops of blood seep from your wounds, you glance over and see the rest of your party, resenting you for your idea to come here in the first place.".red
             prompt = TTY::Prompt.new
             choice = prompt.select("Restart?", %w(Yes No))
             if choice == "Yes"
@@ -99,24 +99,24 @@ class CommandLineInterface
         else 
             @@new_party.return_from_quest
             puts "Wow, you really did it! Good job!".red
-            drink = prompt.select("Do you celebrate, or continue on to your next quest?", %w(Celebrate Quest))
+            drink = prompt.select("Do you celebrate, or continue on to your next quest?", ["Celebrate", "Prepare for the next quest"])
             if drink == "Celebrate"
-                puts "You approach a bustling tavern. Heads turn as commoners recognize the victorious. Your party sits and drinks to good health and fortune!".red
+                puts "You approach a bustling tavern. Heads turn as commoners recognize the victorious.\n Your party sits and drinks to good health and fortune!".red
                 tavern_time
-            elsif drink == "Quest"
-                go_quest
+            elsif drink == "Prepare for the next quest"
+                town_square
             end
         end
     end
 
     def tavern_time
         prompt = TTY::Prompt.new
-        drinks = prompt.select("Have another round?".red, %w(Yes! No))
+        drinks = prompt.select("You're at the tavern. Have a drink?".red, %w(Yes! No))
         if drinks == "Yes!"
             take_drink
         elsif drinks == "No"
             puts "You decide you have celebrated enough and prepare for your next adventure.\n".red
-            go_quest
+            town_square
         end
     end
 
@@ -134,14 +134,41 @@ class CommandLineInterface
         tavern_time
         end
         if @@drink_count == 10
-            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar, you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well. Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".red
+            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar,\n you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well.\n Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".red
             @@new_hero.died
-            restart_question = prompt.select("Restart?".red %w(Yes No))
+            restart_question = prompt.select("Restart?".red, %w(Yes No))
                 if restart_question == "Yes"
                     restart
                 elsif restart_question == "No"
                     exit
                 end
+        end
+    end
+
+    def town_square
+        prompt = TTY::Prompt.new
+        options = ["Meet Companions", "Edit Party", "Go on a Quest", "Go to the Tavern", "Retire"]
+        puts "You're in the square"
+        do_something = prompt.select("What do you want to do?", options)
+            if do_something == "Meet Companions"
+                view_available_characters
+                town_square
+            if do_something == "Edit Party"
+                add_to_party
+            elsif do_something == "Go on a Quest"
+                go_quest
+            elsif do_something == "Go to the Tavern"
+                tavern_time
+            elsif do_something == "Retire"
+                puts "You decide that you have had enough of the exciting life.\n You sell your weapons and armor and retire to a small farm on the edge of a forest.\n Long after you perish, people still whisper tales of your heroic efforts.\n\n\n".red
+                @@new_hero.died
+                restart_question = prompt.select("Restart?".red, %w(Yes No))
+                if restart_question == "Yes"
+                    restart
+                elsif restart_question == "No"
+                    exit
+                end
+            end
         end
     end
 
