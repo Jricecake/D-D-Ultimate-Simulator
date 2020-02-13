@@ -51,16 +51,14 @@ class CommandLineInterface
     # end
 
     def create_a_character
+        prompt = TTY::Prompt.new
         @classes_type = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"]
         @races = ["Human", "Dragonborn", "Dwarf", "Elf", "Half-Elf", "Gnome", "Halfing", "Half-Orc", "Tiefling"]
         puts "What is your Name:".red
         hero_name = gets.strip
         puts "What is your Class?".red
-        @classes_type.each {|ctype| puts ctype}
-        hero_class = gets.strip
-        puts "What is your Race?".red
-        @races.each {|race| puts race}
-        hero_race = gets.strip
+        hero_class = prompt.select("What is your class?".red, @classes_type)
+        hero_race = prompt.select("What is your race?".red, @races)
         @@new_hero = Character.create(name: hero_name, character_class: hero_class, race: hero_race)
     end
 
@@ -69,10 +67,8 @@ class CommandLineInterface
         party_name = gets.strip
         Group.create(name: party_name)
         new_party = Group.all.where(name: party_name)
-        new_party[0].characters << @@new_hero
-        # binding.pry
-        # if @@new_hero
-        # @@new_group.characters << @@new_hero
+        binding.pry
+        @@new_hero.add_to_group(new_party[0])
     end
 
     def view_other_characters

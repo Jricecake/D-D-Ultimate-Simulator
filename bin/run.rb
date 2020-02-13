@@ -1,6 +1,6 @@
 require_relative '../config/environment'
 
-
+@@new_hero = nil
 cli = CommandLineInterface.new
 
 cli.run

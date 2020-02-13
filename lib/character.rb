@@ -30,6 +30,13 @@ class Character < ActiveRecord::Base
         end
     end
 
+    def add_to_group(group)
+        current_membership = CharactersGroup.where(character_id: self.id).count
+        CharactersGroup.create(group_id: group.id, character_id: self.id)
+        current_membership += 1
+        self.update_column(:number_of_groups, current_membership)
+    end
+
     def leave_group(group)
         current_membership = self.number_of_groups
         aras = CharactersGroup.where(group_id: group.id, character_id: self.id)
