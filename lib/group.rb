@@ -20,16 +20,17 @@ class Group < ActiveRecord::Base
     end
 
     def return_from_quest
-        if self.out_on_quest == true
-        self.update(out_on_quest: false)
+        # if self.out_on_quest == true
+        # self.update(out_on_quest: false)
         self.characters.each do |char|
             current_exp = char.exp
             char.update(exp: current_exp += 200)
         end
-        puts "Welcome back, heroes!"
-        else
-            puts "This group is not out on a quest"
-        end
+        # end
+        # puts "Welcome back, heroes!"
+        # else
+        #     puts "This group is not out on a quest"
+        # end
     end
 
     def members
