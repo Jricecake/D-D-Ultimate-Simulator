@@ -32,8 +32,8 @@ class Group < ActiveRecord::Base
         end
     end
 
-    def member_names
-        self.characters.all.map {|member| member.name}
+    def members
+        self.characters.map {|char| puts "#{char.name} is a level #{char.level} #{char.character_class}"}
     end
 
     def die

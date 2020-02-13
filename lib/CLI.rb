@@ -76,22 +76,29 @@ class CommandLineInterface
         avail_aoh = []
         avail_char_hash = view_available_characters.to_h {|char| ["#{char.name} is a level #{char.level} #{char.character_class}", char.id]}
         avail_aoh << avail_char_hash
-        # binding.pry
         join_member = prompt.select("Who will you ask to join?", avail_char_hash)
-            # menu.choice name: view_available_characters.map{|char| "#{char.name} is a level #{char.level} #{char.character_class}"
-        # join_member = prompt.select("Who will you ask to join?".red, view_available_characters.map{|char| "#{char.name} is a level #{char.level} #{char.character_class}"})
-        # mem_obj = join_member.
-        # view_available_characters
-        # binding.pry
         found_member = Character.all.find{|char| char.id == join_member}
-        binding.pry
+        # binding.pry
         found_member.add_to_group(Group.last)
-        yn = prompt.select("Anyone else?", %w(Yes No))
-            if yn == "Yes"
+        more_members = prompt.select("Anyone else?", ["Yes", "No", "View Party"])
+            if more_members == "Yes"
                 add_to_party
-            elsif yn == "No"
-                
+            elsif more_members == "No"
+                go_quest
+            elsif more_members == "View Party"
+                # binding.pry
+                puts "Your party consists of:\n".red
+                Group.last.members
+                puts "\n"
+                add_to_party
+            else
+                puts "I don't understand.. Try again!"
             end
+    end
+    
+
+    def go_quest
+
     end
 
     def view_available_characters
