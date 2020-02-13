@@ -3,11 +3,11 @@ class Character < ActiveRecord::Base
     has_many :groups, through: :characters_groups
 
     def self.all_characters
-        Character.all.map {|char| puts "#{char.name} is a level #{char.level} #{char.character_class}"}
+        Character.all.map {|char| "#{char.name} is a level #{char.level} #{char.character_class}"}
     end
 
     def self.available_chars
-        Character.all.select{|char| char.number_of_groups == 0}
+        available_chars = Character.all.select{|char| char.number_of_groups == 0}
     end
 
     def level_up

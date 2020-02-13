@@ -3,6 +3,7 @@ require "tty-prompt"
 class CommandLineInterface
 
     @@new_hero = nil
+    @@new_party = nil
 
     @@classes_type = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"]
     @races = ["Human", "Dragonborn", "Dwarf", "Elf", "Half-Elf", "Gnome", "Halfing", "Half-Orc", "Tiefling"]
@@ -20,9 +21,8 @@ class CommandLineInterface
         if selection == "Join a Party"
             group_selection = prompt.select("Which group will you join?", view_parties)
                 desired_group = Group.all.where(name: group_selection)
-                # binding.pry
                 @@new_hero.join_group(desired_group[0])
-                puts "A formidable bunch! "
+                puts "A formidable bunch!"
         elsif selection == "Form a Party"
             form_a_party
         end
@@ -56,7 +56,6 @@ class CommandLineInterface
         @races = ["Human", "Dragonborn", "Dwarf", "Elf", "Half-Elf", "Gnome", "Halfing", "Half-Orc", "Tiefling"]
         puts "What is your Name:".red
         hero_name = gets.strip
-        puts "What is your Class?".red
         hero_class = prompt.select("What is your class?".red, @classes_type)
         hero_race = prompt.select("What is your race?".red, @races)
         @@new_hero = Character.create(name: hero_name, character_class: hero_class, race: hero_race)
@@ -66,13 +65,37 @@ class CommandLineInterface
         puts "What do you call your party?"
         party_name = gets.strip
         Group.create(name: party_name)
-        new_party = Group.all.where(name: party_name)
-        binding.pry
-        @@new_hero.add_to_group(new_party[0])
+        @@new_party = Group.all.where(name: party_name)
+        @@new_hero.add_to_group(@@new_party[0])
+        puts "The people will celebrate #{party_name} for centuries!".red
     end
 
-    def view_other_characters
-        Character.all_characters
+    def add_to_party
+        prompt = TTY::Prompt.new
+        # binding.pry
+        avail_aoh = []
+        avail_char_hash = view_available_characters.to_h {|char| ["#{char.name} is a level #{char.level} #{char.character_class}", char.id]}
+        avail_aoh << avail_char_hash
+        # binding.pry
+        join_member = prompt.select("Who will you ask to join?", avail_char_hash)
+            # menu.choice name: view_available_characters.map{|char| "#{char.name} is a level #{char.level} #{char.character_class}"
+        # join_member = prompt.select("Who will you ask to join?".red, view_available_characters.map{|char| "#{char.name} is a level #{char.level} #{char.character_class}"})
+        # mem_obj = join_member.
+        # view_available_characters
+        # binding.pry
+        found_member = Character.all.find{|char| char.id == join_member}
+        binding.pry
+        found_member.add_to_group(Group.last)
+        yn = prompt.select("Anyone else?", %w(Yes No))
+            if yn == "Yes"
+                add_to_party
+            elsif yn == "No"
+                
+            end
+    end
+
+    def view_available_characters
+        Character.available_chars
     end
 
     def view_parties
