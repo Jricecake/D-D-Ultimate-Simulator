@@ -8,6 +8,11 @@ class Character < ActiveRecord::Base
 
     def self.available_chars
         available_chars = Character.all.select{|char| char.number_of_groups == 0}
+        available_chars.map {|char| "#{char.name} is a level #{char.level} #{char.character_class}"}
+    end
+
+    def self.available_chars_obj
+        available_chars = Character.all.select{|char| char.number_of_groups == 0}
     end
 
     def level_up

@@ -42,7 +42,7 @@ class CommandLineInterface
         hero_class = prompt.select("What is your class?".red, @classes_type)
         hero_race = prompt.select("What is your race?".red, @races)
         @@new_hero = Character.create(name: hero_name, character_class: hero_class, race: hero_race)
-        town_square
+        party_choice
     end
 
     def form_a_party
@@ -58,7 +58,8 @@ class CommandLineInterface
     def add_to_party
         prompt = TTY::Prompt.new
         # binding.pry
-        avail_char_hash = view_available_characters.to_h {|char| ["#{char.name} is a level #{char.level} #{char.character_class}", char.id]}
+        avail_char_hash = Character.available_chars_obj.to_h {|char| ["#{char.name} is a level #{char.level} #{char.character_class}", char.id]}
+        # binding.pry
         join_member = prompt.select("Who will you ask to join?".red, avail_char_hash)
         found_member = Character.all.find{|char| char.id == join_member}
         # binding.pry
@@ -81,6 +82,7 @@ class CommandLineInterface
     
 
     def go_quest
+        # binding.pry
         prompt = TTY::Prompt.new
         puts "Your party is ready for adventure! You find your nearest quest and depart!".red
         # binding.pry
@@ -136,12 +138,6 @@ class CommandLineInterface
         if @@drink_count == 10
             puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar,\n you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well.\n Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".red
             @@new_hero.died
-            restart_question = prompt.select("Restart?".red, %w(Yes No))
-                if restart_question == "Yes"
-                    restart
-                elsif restart_question == "No"
-                    exit
-                end
         end
     end
 
@@ -153,7 +149,7 @@ class CommandLineInterface
             if do_something == "Meet Companions"
                 puts view_available_characters
                 town_square
-            if do_something == "Edit Party"
+            elsif do_something == "Edit Party"
                 add_to_party
             elsif do_something == "Go on a Quest"
                 go_quest
@@ -169,11 +165,13 @@ class CommandLineInterface
                     exit
                 end
             end
-        end
+    
     end
+             
+
 
     def view_available_characters
-        Character.available_chars
+        Character.all_characters
     end
 
     def view_parties
@@ -185,7 +183,12 @@ class CommandLineInterface
         @@new_hero = nil
         @@new_party = nil
         @@drink_count = 0
-        run
+        restart_question = prompt.select("Restart?".red, %w(Yes No))
+                if restart_question == "Yes"
+                    run
+                elsif restart_question == "No"
+                    exit
+                end
     end
 
 end
