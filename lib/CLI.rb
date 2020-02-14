@@ -89,8 +89,8 @@ class CommandLineInterface
         chance = rand(1...10)
         # binding.pry
         if chance == 6
-            @@new_party.die
-            puts "Oh no! It seems your party was eaten by a dragon! You're all dead and no one remembers you. You die slowly, painfully, and without purpose.\n As you the last few drops of blood seep from your wounds, you glance over and see the rest of your party, resenting you for your idea to come here in the first place.".red
+            @@new_party.destroy
+            puts "Oh no! It seems your party was eaten by a dragon! You're all dead and no one remembers you. You die slowly, painfully, and without purpose.\n As you the last few drops of blood seep from your wounds, you glance over and see the rest of your party, resenting you for your idea to come here in the first place.\n".yellow
             prompt = TTY::Prompt.new
             choice = prompt.select("Restart?", %w(Yes No))
             if choice == "Yes"
@@ -113,6 +113,7 @@ class CommandLineInterface
 
     def tavern_time
         prompt = TTY::Prompt.new
+        # binding.pry
         drinks = prompt.select("You're at the tavern. Have a drink?".red, %w(Yes! No))
         if drinks == "Yes!"
             take_drink
@@ -136,8 +137,9 @@ class CommandLineInterface
         tavern_time
         end
         if @@drink_count == 10
-            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar,\n you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well.\n Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".red
-            @@new_hero.died
+            puts "Your vision began fading a few drinks ago. At this point, you have no control over your body. Collapsing outside of the bar,\n you are recognized by a common thief as a decorated adventurer. He robs you of all your valuables. When you come to, you realize that not only have you lost your possessions, but everyone's respect as well.\n Unable to recover from this, you slowly succumb to alcoholism, eventually perishing from asphyxiation from vomitting in your sleep.\n \n \n \n".yellow
+            @@new_hero.destroy
+            restart
         end
     end
 
@@ -156,8 +158,8 @@ class CommandLineInterface
             elsif do_something == "Go to the Tavern"
                 tavern_time
             elsif do_something == "Retire"
-                puts "You decide that you have had enough of the exciting life.\n You sell your weapons and armor and retire to a small farm on the edge of a forest.\n Long after you perish, people still whisper tales of your heroic efforts.\n\n\n".red
-                @@new_hero.died
+                puts "You decide that you have had enough of the exciting life.\n You sell your weapons and armor and retire to a small farm on the edge of a forest.\n Long after you perish, people still whisper tales of your heroic efforts.\n\n\n".yellow
+                @@new_hero.destroy
                 restart_question = prompt.select("Restart?".red, %w(Yes No))
                 if restart_question == "Yes"
                     restart
@@ -180,6 +182,7 @@ class CommandLineInterface
     end
 
     def restart
+        prompt = TTY::Prompt.new
         @@new_hero = nil
         @@new_party = nil
         @@drink_count = 0
