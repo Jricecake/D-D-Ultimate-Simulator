@@ -151,7 +151,7 @@ class CommandLineInterface
         puts "You're in the square"
         do_something = prompt.select("What do you want to do?", options)
             if do_something == "Meet Companions"
-                view_available_characters
+                puts view_available_characters
                 town_square
             if do_something == "Edit Party"
                 add_to_party
